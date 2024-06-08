@@ -1,0 +1,290 @@
+[
+    {
+        "city": "Abington",
+        "state": "Massachusetts",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Anoka",
+        "state": "Minnesota",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Assumption",
+        "state": "Illinois",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Austin",
+        "state": "Texas",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Bellingham",
+        "state": "Washington",
+        "brewery_type": "closed",
+        "count": 1
+    },
+    {
+        "city": "Bend",
+        "state": "Oregon",
+        "brewery_type": "large",
+        "count": 3
+    },
+    {
+        "city": "Boise",
+        "state": "Idaho",
+        "brewery_type": "large",
+        "count": 1
+    },
+    {
+        "city": "Castle Rock",
+        "state": "Colorado",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Cincinnati",
+        "state": "Ohio",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Coraopolis",
+        "state": "Pennsylvania",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Crosslake",
+        "state": "Minnesota",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Denver",
+        "state": "Colorado",
+        "brewery_type": "large",
+        "count": 1
+    },
+    {
+        "city": "Denver",
+        "state": "Colorado",
+        "brewery_type": "proprietor",
+        "count": 1
+    },
+    {
+        "city": "Des Moines",
+        "state": "Iowa",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Gary",
+        "state": "Indiana",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Georgetown",
+        "state": "Delaware",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Gilbert",
+        "state": "Arizona",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Hammond",
+        "state": "Indiana",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Holland Patent",
+        "state": "New York",
+        "brewery_type": "brewpub",
+        "count": 1
+    },
+    {
+        "city": "Houston",
+        "state": "Texas",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Jackson",
+        "state": "Michigan",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "John Day",
+        "state": "Oregon",
+        "brewery_type": "brewpub",
+        "count": 1
+    },
+    {
+        "city": "Killeshin",
+        "state": "Laois",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Knox",
+        "state": "Indiana",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Louisville",
+        "state": "Colorado",
+        "brewery_type": "brewpub",
+        "count": 1
+    },
+    {
+        "city": "Mariposa",
+        "state": "California",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Mason",
+        "state": "Ohio",
+        "brewery_type": "brewpub",
+        "count": 1
+    },
+    {
+        "city": "Mesa",
+        "state": "Arizona",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Milwaukee",
+        "state": "Wisconsin",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Mount Pleasant",
+        "state": "Wisconsin",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Norman",
+        "state": "Oklahoma",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Ocracoke",
+        "state": "North Carolina",
+        "brewery_type": "brewpub",
+        "count": 1
+    },
+    {
+        "city": "Okolona",
+        "state": "Mississippi",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Petaluma",
+        "state": "California",
+        "brewery_type": "closed",
+        "count": 1
+    },
+    {
+        "city": "Portland",
+        "state": "Oregon",
+        "brewery_type": "brewpub",
+        "count": 1
+    },
+    {
+        "city": "Portland",
+        "state": "Oregon",
+        "brewery_type": "large",
+        "count": 1
+    },
+    {
+        "city": "Quilcene",
+        "state": "Washington",
+        "brewery_type": "brewpub",
+        "count": 1
+    },
+    {
+        "city": "Raleigh",
+        "state": "North Carolina",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Reno",
+        "state": "Nevada",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Saint Albans",
+        "state": "Vermont",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Saint Paul",
+        "state": "Minnesota",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "San Diego",
+        "state": "California",
+        "brewery_type": "large",
+        "count": 1
+    },
+    {
+        "city": "Spotsylvania",
+        "state": "Virginia",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Taylors",
+        "state": "South Carolina",
+        "brewery_type": "brewpub",
+        "count": 1
+    },
+    {
+        "city": "Tucson",
+        "state": "Arizona",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Westlake Village",
+        "state": "California",
+        "brewery_type": "micro",
+        "count": 1
+    },
+    {
+        "city": "Westminister",
+        "state": "Maryland",
+        "brewery_type": "contract",
+        "count": 1
+    },
+    {
+        "city": "Williamsville",
+        "state": "New York",
+        "brewery_type": "brewpub",
+        "count": 1
+    }
+]
