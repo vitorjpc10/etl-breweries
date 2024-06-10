@@ -3,7 +3,7 @@
 bonus: visualizer of data SPIKE/ upload to data folder to s3
 
 
-### Readme em português esta aqui: [README Português](README-PT.md)
+### Readme em português esta aqui: [README-PT](README-PT.md)
 
 ## Description
  1. This project extracts breweries data from API endpoint <https://api.openbrewerydb.org/breweries>
