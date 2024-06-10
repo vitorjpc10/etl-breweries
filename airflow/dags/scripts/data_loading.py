@@ -1,8 +1,6 @@
-
 from pyspark.sql import SparkSession
 import os
 import psycopg2
-from pyspark.sql.functions import monotonically_increasing_id
 
 
 class Loading:
@@ -49,42 +47,25 @@ class Loading:
 
         # Define SQL to create tables if they don't exist
         create_table_sql = {
-            "weather": """
-                CREATE TABLE IF NOT EXISTS weather (
+            "breweries": """
+                CREATE TABLE IF NOT EXISTS breweries (
                     id SERIAL PRIMARY KEY,
+                    address_1 TEXT,
+                    address_2 TEXT,
+                    address_3 TEXT,
+                    brewery_type TEXT,
+                    city TEXT,
                     country TEXT,
-                    description TEXT,
-                    feels_like FLOAT,
-                    humidity FLOAT,
+                    brewery_id TEXT,
                     latitude FLOAT,
                     longitude FLOAT,
                     name TEXT,
-                    pressure FLOAT,
-                    sunrise TEXT,
-                    sunset TEXT,
-                    temp_max FLOAT,
-                    temp_min FLOAT,
-                    temperature FLOAT,
-                    timestamp TEXT,
-                    visibility INT,
-                    wind_degree_direction INT,
-                    wind_speed FLOAT
-                );
-            """,
-            "traffic": """
-                CREATE TABLE IF NOT EXISTS traffic (
-                    id SERIAL PRIMARY KEY,
-                    destination_latitude FLOAT,
-                    destination_longitude FLOAT,
-                    destination_name TEXT,
-                    distance FLOAT,
-                    duration INT,
-                    geometry TEXT,
-                    origin_latitude FLOAT,
-                    origin_longitude FLOAT,
-                    origin_name TEXT,
-                    route_coordinates TEXT,
-                    start_time TEXT
+                    phone TEXT,
+                    postal_code TEXT,
+                    state TEXT,
+                    state_province TEXT,
+                    street TEXT,
+                    website_url TEXT
                 );
             """
         }
@@ -106,9 +87,6 @@ class Loading:
         # Create DataFrame from the provided data
         df = self.spark.createDataFrame(data)
 
-        # Add a primary key column
-        df = df.withColumn("id_primary", monotonically_increasing_id())
-
         # Define PostgreSQL connection properties
         properties = {
             "user": self.postgres_user,
@@ -118,7 +96,6 @@ class Loading:
 
         # Write DataFrame to PostgreSQL
         df.write.jdbc(url=self.postgres_url, table=table_name, mode="append", properties=properties)
-
 
     def close_spark(self):
         # Stop SparkSession

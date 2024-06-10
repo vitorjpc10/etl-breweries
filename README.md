@@ -4,7 +4,8 @@ TODO: move file write ultility functions to its own class from main
 adjust create table function in loading script .py for this project
 implement pytest classes and see how to call from main
 create dag for project
-bonus: visualizer of data SPIKE
+bonus: visualizer of data SPIKE/ upload to data folder to s3
+
 
 ### Readme em português esta aqui: [README Português](README-PT.md)
 
@@ -45,7 +46,7 @@ Set the environment variables for API keys in the `docker-compose` files. Obtain
 
 5. The data will be extracted, transformed, and loaded into the PostgreSQL database based on the logic in `scripts/main.py`.
 
-6. Once built, run the following command to execute queries on both weather and traffic tables:
+6. Once built, run the following command to execute queries on both weather and traffic tables from PostgreSQL database container:
     ```bash
     docker exec -it etl-breweries-db-1 psql -U postgres -c "\i queries/queries.sql"
     ```
@@ -66,14 +67,17 @@ Set the environment variables for API keys in the `docker-compose` files. Obtain
 
 5. Build and run the Docker containers:
     ```bash
-    docker-compose up --build
+    docker-compose up aiflow-init --build
+    ```
+   ```bash
+    docker-compose up
     ```
 
 6. Once all containers are built access local (http://localhost:8080/) and trigger etl_dag DAG (username and password are admin by default)
 
 7. Once DAG compiles successfully, run the following command to execute queries on both weather and traffic tables:
     ```bash
-    docker exec -it etl-weather_traffic_data-db-1 psql -U airflow -c "\i queries/queries.sql"
+    docker exec -it airflow-postgres-1 psql -U airflow -c "\i queries/queries.sql"
     ```
    Do `\q` in terminal to quit query, there are 2 queries in total.
 
