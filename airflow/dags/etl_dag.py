@@ -1,6 +1,5 @@
 import logging
 import os
-# import pytest
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
@@ -8,6 +7,8 @@ from scripts.data_extraction import Extract
 from scripts.data_transformation import Transform
 from scripts.data_loading import Loading
 from scripts.file_io_utilities import FileIO
+from test.extraction_data_tests import ExtractionDataTests
+from test.transformation_data_tests import TransformationDataTests
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -28,12 +29,15 @@ def extract_data(ti):
 
     file_io.save_to_json_file(brewery_data, os.path.join(extracted_path, 'extracted_breweries_data.json'))
 
-    # Running extraction tests
-    # pytest.main(["-q", "--disable-warnings", "-s", os.path.join("test_extraction.py")])
-
     # Push data to XCom
     ti.xcom_push(key='breweries_data', value=brewery_data)
 
+
+def extract_data_test(ti):
+    breweries_data = ti.xcom_pull(key='breweries_data', task_ids='extract_data')
+
+    transformation_test = ExtractionDataTests(breweries_data)
+    transformation_test.run_tests()
 
 def transform_data(ti):
     # Pull data from XCom
@@ -48,8 +52,6 @@ def transform_data(ti):
     file_io.save_to_json_file(brewery_data_formatted, os.path.join(transformed_path, 'raw', 'json', 'formatted_breweries_data.json'))
     file_io.save_to_parquet_folder(brewery_data_formatted, os.path.join(transformed_path, 'raw', 'parquet'), ['state', 'city'])
 
-    # Running transformation tests
-    # pytest.main(["-q", "--disable-warnings", "-s", os.path.join('tests', "test_transformation.py")])
 
     brewery_type_aggregated_view = transform.create_aggregated_view_brewery_type(breweries_data, ['city', 'state'])
 
@@ -58,6 +60,14 @@ def transform_data(ti):
 
     # Push transformed data to XCom
     ti.xcom_push(key='breweries_data_formatted', value=brewery_data_formatted)
+
+def transform_data_test(ti):
+    # Pull transformed data from XCom
+    breweries_data_formatted = ti.xcom_pull(key='breweries_data_formatted', task_ids='transform_data')
+
+    # Running transformation tests
+    transformation_test = TransformationDataTests(breweries_data_formatted)
+    transformation_test.run_tests()
 
 
 def load_data(ti):
@@ -81,6 +91,7 @@ default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
     'start_date': datetime(2024, 6, 10),
+    'email': ['your_email@example.com'],
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
@@ -99,9 +110,19 @@ with DAG(
         python_callable=extract_data
     )
 
+    extract_data_test_task = PythonOperator(
+        task_id='extract_data_test_validation',
+        python_callable=extract_data_test
+    )
+
     transform_task = PythonOperator(
         task_id='transform_data',
         python_callable=transform_data
+    )
+
+    transform_data_test_task = PythonOperator(
+        task_id='transform_data_test_validation',
+        python_callable=transform_data_test
     )
 
     load_task = PythonOperator(
@@ -109,4 +130,4 @@ with DAG(
         python_callable=load_data
     )
 
-    extract_task >> transform_task >> load_task
+    extract_task >> extract_data_test_task >> transform_task >> transform_data_test_task >> load_task

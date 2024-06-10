@@ -6,6 +6,10 @@ import psycopg2
 class Loading:
 
     def __init__(self):
+        """
+        Initializes Loading object and sets up PostgreSQL connection and SparkSession.
+        """
+
         # Load environment variables
         self.postgres_host = os.getenv('POSTGRES_HOST')
         self.postgres_port = os.getenv('POSTGRES_PORT')
@@ -35,7 +39,16 @@ class Loading:
             .getOrCreate()
 
     def create_table_if_not_exists(self, table_name: str):
-        # Connect to PostgreSQL to create the table if it doesn't exist
+        """
+       Creates a table in PostgreSQL if it doesn't exist.
+
+       Args:
+       table_name (str): The name of the table to create.
+
+       Raises:
+       ValueError: If the table name is not recognized.
+       """
+
         connection = psycopg2.connect(
             host=self.postgres_host,
             port=self.postgres_port,
@@ -78,11 +91,17 @@ class Loading:
             raise ValueError(f"Unknown table name: {table_name}. Table create query undefined. "
                              f" Defined table queries are: {create_table_sql.keys()}")
 
-        # # Close the cursor and connection
         cursor.close()
         connection.close()
 
     def load_data(self, data: dict, table_name: str):
+        """
+        Loads data into PostgreSQL.
+
+        Args:
+        data (dict): The data to load into the table.
+        table_name (str): The name of the table to load data into.
+        """
 
         # Create DataFrame from the provided data
         df = self.spark.createDataFrame(data)
@@ -98,5 +117,8 @@ class Loading:
         df.write.jdbc(url=self.postgres_url, table=table_name, mode="append", properties=properties)
 
     def close_spark(self):
-        # Stop SparkSession
+        """
+        Stops the SparkSession.
+        """
+
         self.spark.stop()

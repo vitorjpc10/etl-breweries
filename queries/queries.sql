@@ -1,4 +1,4 @@
--- Query to breweries table
+-- Query to view breweries table
 SELECT * FROM breweries;
 
 -- Query for aggregated view with the quantity of breweries per type and location.

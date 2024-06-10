@@ -3,6 +3,9 @@ FROM apache/airflow:latest-python3.10
 # Set the working directory
 WORKDIR /app
 
+# Set the PYTHONPATH
+ENV PYTHONPATH /app
+
 # Copy the current directory contents into the container at /app
 COPY . /app
 

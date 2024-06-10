@@ -11,8 +11,12 @@ class FileIO:
         """
         Write a dictionary to a file in JSON format. Creates the directory if it is missing.
 
-        :param data_dict: Dictionary to write to file
-        :param file_path: Path to the file where the dictionary should be written
+        Args:
+        data_dict (dict): Dictionary to write to file.
+        file_path (str): Path to the file where the dictionary should be written.
+
+        Raises:
+        Exception: If writing to file fails.
         """
 
         try:
@@ -36,9 +40,13 @@ class FileIO:
         """
         Saves the data to Parquet files.
 
-        :param data: List of dictionaries to save
-        :param output_path: Directory to save Parquet files
-        :param partition_cols: Optional string list of column keys to partition by
+        Args:
+        data (list of dict): List of dictionaries to save.
+        output_path (str): Directory to save Parquet files.
+        partition_cols (list of str, optional): String list of column keys to partition by.
+
+        Raises:
+        Exception: If writing to Parquet files fails.
         """
 
         # Ensure the output directory exists

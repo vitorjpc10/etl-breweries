@@ -70,7 +70,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G  # Increase this to a higher value
+          memory: 2G
 
   airflow-scheduler:
     <<: *airflow-common
@@ -79,7 +79,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G  # Increase this to a higher value
+          memory: 2G
 
 volumes:
   postgres-db-volume:

@@ -1,16 +1,14 @@
-# ETL Data Pipeline for Weather and Traffic Data
+# ETL Data Pipeline for Breweries Data
 
-TODO: move file write ultility functions to its own class from main
-adjust create table function in loading script .py for this project
-implement pytest classes and see how to call from main
-create dag for project
 bonus: visualizer of data SPIKE/ upload to data folder to s3
 
 
 ### Readme em português esta aqui: [README Português](README-PT.md)
 
 ## Description
-This project extracts weather data from the OpenWeatherMap API and traffic data from the OSRM API, transforms and cleans the data, and loads it into a PostgreSQL database. Queries are then executed to generate reports based on the extracted data.
+ 1. This project extracts breweries data from API endpoint <https://api.openbrewerydb.org/breweries>
+ 2. Transforms, cleans the data, persists the data in json and parquet formats, including aggregated view with  quantity of breweries per type and location.
+ 3. Loads data into Postgres Database for further querying capabilities. 
 
 ## Setup
 
@@ -19,44 +17,32 @@ This project extracts weather data from the OpenWeatherMap API and traffic data 
 - Docker
 - Docker Compose
 
-### Environment Variables
-Set the environment variables for API keys in the `docker-compose` files. Obtain your API keys from:
-- [OpenWeatherMap API](https://home.openweathermap.org/api_keys)
-- [OSRM API](https://project-osrm.org/)
-
 ### Steps to Run
 
-1. Set environment variables for api keys in docker-compose files (https://home.openweathermap.org/api_keys)
-
-2. Clone the repository:
+1. Clone the repository:
     ```bash
-    git clone https://github.com/vitorjpc10/etl-weather_traffic_data.git
+    git clone https://github.com/vitorjpc10/etl-breweries.git
     ```
-3. Move to the newly cloned repository:
+2. Move to the newly cloned repository:
     ```bash
-    cd etl-weather_traffic_data
+    cd etl-breweries
     ```
 
-### ETL without Orchestrator (Python Docker)
+### ETL without Orchestrator (Python Docker Image)
 
-4. Build and run the Docker containers:
+3. Build and run the Docker containers:
     ```bash
     docker-compose up --build
     ```
 
-5. The data will be extracted, transformed, and loaded into the PostgreSQL database based on the logic in `scripts/main.py`.
+4. The data will be extracted, transformed, and loaded into the PostgreSQL database based on the logic in `scripts/main.py`.
 
-6. Once built, run the following command to execute queries on both weather and traffic tables from PostgreSQL database container:
+5. Once built, run the following command to execute queries on both weather and traffic tables from PostgreSQL database container:
     ```bash
     docker exec -it etl-breweries-db-1 psql -U postgres -c "\i queries/queries.sql"
     ```
 
    Do `\q` in terminal to quit query, there are 2 queries in total.
-
-7. To generate the pivoted report, access the PostgreSQL database and execute the `query.sql` SQL file:
-    ```bash
-    docker exec -it etl-gdp-of-south-american-countries-using-the-world-bank-api-db-1 psql -U postgres -c "\i query.sql"
-    ```
 
 ### ETL with Orchestrator (Apache Airflow)
 
@@ -89,6 +75,10 @@ Set the environment variables for API keys in the `docker-compose` files. Obtain
 - Pure Python, SQL, and PySpark are used for data manipulation to ensure lightweight and efficient data processing.
 - The SQL queries for generating reports are stored in separate files (e.g., `queries.sql`). This allows for easy modification of the queries and provides a convenient way to preview the results.
 - To generate the reports, the SQL queries are executed within the PostgreSQL database container. This approach simplifies the process and ensures that the queries can be easily run and modified as needed.
+- The extracted data is saved locally and mounted to the containers, including the raw data coming from the API and the transformed metadata, both in JSON and Parquet format. This setup offers simplicity (KISS principle) and flexibility, allowing for easy access to the data.
+- An aggregate view with the quantity of breweries per type and location is created to provide insights into the data.
+- Orchestration through Apache Airflow ensures task separation and establishes a framework for executing and monitoring the ETL process. It provides notification alerts for retries or task failures, enhancing the robustness of the pipeline.
+
 
 ## Airflow Sample DAG
 ![img.png](img.png)

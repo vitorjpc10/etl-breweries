@@ -3,6 +3,16 @@ import pandas as pd
 class Transform:
 
     def format_brewery_data(self, data):
+        """
+        Formats brewery data dictionaries.
+
+        Args:
+        data (list of dict): List of dictionaries containing brewery data.
+
+        Returns:
+        list of dict: Formatted list of brewery data dictionaries.
+        """
+
         for entry in data:
             entry['city'] = entry['city'].title() if entry.get('city') else ''
             entry['state'] = entry['state'].title() if entry.get('state') else ''
@@ -18,12 +28,16 @@ class Transform:
         """
         Creates an aggregated view with the quantity of breweries per type and location.
 
-        :param location_keys: List of keys to group by (e.g., ['state', 'city'])
-        :param location_keys:
-        :param data: Cleaned list of brewery data dictionaries
-        :return: Aggregated list of dictionaries
+        Args:
+        data (list of dict): Cleaned list of brewery data dictionaries.
+        location_keys (list of str): List of keys to group by (e.g., ['state', 'city']).
+
+        Returns:
+        list of dict: Aggregated list of dictionaries.
+
+        Raises:
+        ValueError: If any of the location keys are not found in the DataFrame columns.
         """
-        # Convert dictionary to DataFrame
         df = pd.DataFrame(data)
 
         # Check if all location keys are present in the DataFrame columns
@@ -35,7 +49,6 @@ class Transform:
         group_by_keys = location_keys.copy()
         group_by_keys.append('brewery_type')
 
-        # Group by state, city, and brewery type and count the occurrences
         agg_df = df.groupby(group_by_keys).size().reset_index(name='count')
 
         # Convert DataFrame back to list of dictionaries
