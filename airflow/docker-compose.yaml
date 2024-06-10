@@ -15,7 +15,6 @@ x-airflow-common:
     POSTGRES_DB: airflow
     POSTGRES_HOST: postgres
     POSTGRES_PORT: 5432
-    WEATHER_API_KEY: '' #! Insert OpenWeatherAPI key here
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs

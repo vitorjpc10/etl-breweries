@@ -1,4 +1,5 @@
 requests
-polyline
+pandas
+pyarrow
 pyspark
 psycopg2-binary

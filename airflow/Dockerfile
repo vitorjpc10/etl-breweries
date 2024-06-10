@@ -1,8 +1,13 @@
 FROM apache/airflow:latest-python3.10
 
-COPY requirements.txt /requirements.txt
+# Set the working directory
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . /app
+
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r /requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Switch to root user to perform system-level operations
 USER root

@@ -1,76 +1,75 @@
 import logging
+import os
+# import pytest
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from data_extraction import Extract
-from data_transformation import Transform
-from data_loading import Loading
+from scripts.data_extraction import Extract
+from scripts.data_transformation import Transform
+from scripts.data_loading import Loading
+from scripts.file_io_utilities import FileIO
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+# Initiating file read/write utility class
+file_io = FileIO()
+base_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+extracted_path = os.path.join(base_path, 'data', 'extracted')
+transformed_path = os.path.join(base_path, 'data', 'transformed')
+
+
 def extract_data(ti):
-    # Initialize Extractor
     extract = Extract()
 
-    # Extract weather data
-    logging.info("Extracting weather data...")
-    weather_data = extract.get_weather(longitude=-74.0060, latitude=40.7128, exclude='hourly,daily', units='metric', lang='en')
-    logging.info("Weather data extracted successfully.")
+    logging.info("Extracting breweries data...")
+    brewery_data = extract.get_breweries()
+    logging.info("Breweries data extracted successfully.")
 
-    # Extract traffic data
-    logging.info("Extracting traffic data...")
-    traffic_data = extract.get_traffic(start_coords=(-74.0060, 40.7128), end_coords=(-122.4194, 37.7749))
-    logging.info("Traffic data extracted successfully.")
+    file_io.save_to_json_file(brewery_data, os.path.join(extracted_path, 'extracted_breweries_data.json'))
+
+    # Running extraction tests
+    # pytest.main(["-q", "--disable-warnings", "-s", os.path.join("test_extraction.py")])
 
     # Push data to XCom
-    ti.xcom_push(key='weather_data', value=weather_data)
-    ti.xcom_push(key='traffic_data', value=traffic_data)
+    ti.xcom_push(key='breweries_data', value=brewery_data)
 
 
 def transform_data(ti):
-    # Initialize Transformer
+    # Pull data from XCom
+    breweries_data = ti.xcom_pull(key='breweries_data', task_ids='extract_data')
+
     transform = Transform()
 
-    # Pull data from XCom
-    weather_data = ti.xcom_pull(key='weather_data', task_ids='extract_data')
-    traffic_data = ti.xcom_pull(key='traffic_data', task_ids='extract_data')
+    logging.info("Transforming breweries data...")
+    brewery_data_formatted = transform.format_brewery_data(breweries_data)
+    logging.info("Breweries data transformed successfully.")
 
-    # Transform weather data
-    logging.info("Transforming weather data...")
-    weather_data_formatted = transform.clean_weather_data(weather_data)
-    logging.info("Weather data transformed successfully.")
+    file_io.save_to_json_file(brewery_data_formatted, os.path.join(transformed_path, 'raw', 'json', 'formatted_breweries_data.json'))
+    file_io.save_to_parquet_folder(brewery_data_formatted, os.path.join(transformed_path, 'raw', 'parquet'), ['state', 'city'])
 
-    # Transform traffic data
-    logging.info("Transforming traffic data...")
-    traffic_data_formatted = transform.clean_traffic_data(traffic_data)
-    logging.info("Traffic data transformed successfully.")
+    # Running transformation tests
+    # pytest.main(["-q", "--disable-warnings", "-s", os.path.join('tests', "test_transformation.py")])
+
+    brewery_type_aggregated_view = transform.create_aggregated_view_brewery_type(breweries_data, ['city', 'state'])
+
+    file_io.save_to_json_file(brewery_type_aggregated_view, os.path.join(transformed_path, 'aggregated_data', 'json', 'brewery_type_aggregated_view.json'))
+    file_io.save_to_parquet_folder(brewery_type_aggregated_view, os.path.join(transformed_path, 'aggregated_data', 'parquet'))
 
     # Push transformed data to XCom
-    ti.xcom_push(key='weather_data_formatted', value=weather_data_formatted)
-    ti.xcom_push(key='traffic_data_formatted', value=traffic_data_formatted)
+    ti.xcom_push(key='breweries_data_formatted', value=brewery_data_formatted)
 
 
 def load_data(ti):
-    # Initialize Loader
+    # Pull transformed data from XCom
+    breweries_data_formatted = ti.xcom_pull(key='breweries_data_formatted', task_ids='transform_data')
+
     load = Loading()
 
-    load.create_table_if_not_exists("traffic")
-    load.create_table_if_not_exists("weather")
-
-    # Pull transformed data from XCom
-    weather_data_formatted = ti.xcom_pull(key='weather_data_formatted', task_ids='transform_data')
-    traffic_data_formatted = ti.xcom_pull(key='traffic_data_formatted', task_ids='transform_data')
-
-    # Load weather data
-    logging.info("Loading weather data...")
-    load.load_data(weather_data_formatted, "weather")
-    logging.info("Weather data loaded successfully.")
-
-    # Load traffic data
-    logging.info("Loading traffic data...")
-    load.load_data(traffic_data_formatted, "traffic")
-    logging.info("Traffic data loaded successfully.")
+    # Load breweries data
+    logging.info("Loading breweries data...")
+    load.load_data(breweries_data_formatted, "breweries")
+    logging.info("Breweries data loaded successfully.")
 
     load.close_spark()
 
@@ -81,17 +80,17 @@ def load_data(ti):
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2024, 6, 7),
+    'start_date': datetime(2024, 6, 10),
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
-    'retry_delay': timedelta(minutes=5),
+    'retry_delay': timedelta(minutes=2),
 }
 
 with DAG(
         default_args=default_args,
-        dag_id='data_etl_dag',
-        description='A DAG for extracting, transforming, and loading  traffic and weather data',
+        dag_id='breweries_etl_dag',
+        description='A DAG for extracting, transforming, and loading  brewery data',
         schedule_interval='@daily'
 ) as dag:
 

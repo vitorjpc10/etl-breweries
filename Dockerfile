@@ -12,10 +12,14 @@ ENV JAVA_HOME /usr/lib/jvm/java-17-openjdk-amd64
 # Set the working directory
 WORKDIR /app
 
+# Set the PYTHONPATH
+ENV PYTHONPATH /app
+
 # Copy the current directory contents into the container at /app
 COPY . /app
 
 # Install any needed packages specified in requirements.txt
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Entry point for your application
