@@ -70,7 +70,7 @@ def write_extract_data(ti):
     breweries_data = ti.xcom_pull(key='breweries_data', task_ids='extract_data')
 
     file_io.save_to_json_file(breweries_data, os.path.join(extracted_path, 'extracted_breweries_data.json'))
-    file_io.save_to_json_file_s3(breweries_data, f"s3://personal-vc/etl-breweries/extracted/{timestamp_partition}/extracted_breweries_data.json")
+    file_io.save_to_json_file_s3(breweries_data, f"{os.getenv('S3_OUTPUT_PATH')}/extracted/{timestamp_partition}/extracted_breweries_data.json")
 
 def transform_data(ti):
     """
@@ -91,14 +91,7 @@ def transform_data(ti):
     brewery_data_formatted = transform.format_brewery_data(breweries_data)
     logging.info("Breweries data transformed successfully.")
 
-    file_io.save_to_json_file(brewery_data_formatted, os.path.join(transformed_path, 'raw', 'json', 'formatted_breweries_data.json'))
-    file_io.save_to_parquet_folder(brewery_data_formatted, os.path.join(transformed_path, 'raw', 'parquet'), ['state', 'city'])
-
-
     brewery_type_aggregated_view = transform.create_aggregated_view_brewery_type(breweries_data, ['city', 'state'])
-
-    file_io.save_to_json_file(brewery_type_aggregated_view, os.path.join(transformed_path, 'aggregated_data', 'json', 'brewery_type_aggregated_view.json'))
-    file_io.save_to_parquet_folder(brewery_type_aggregated_view, os.path.join(transformed_path, 'aggregated_data', 'parquet'))
 
     # Push transformed data to XCom
     ti.xcom_push(key='breweries_data_formatted', value=brewery_data_formatted)
@@ -137,15 +130,15 @@ def write_transform_data(ti):
 
     # Save formatted data to JSON and Parquet files
     file_io.save_to_json_file(breweries_data_formatted, os.path.join(transformed_path, 'raw', 'json', f'{timestamp_partition}/formatted_breweries_data.json'))
-    file_io.save_to_json_file_s3(breweries_data_formatted, f"s3://personal-vc/etl-breweries/transformed/raw/json/{timestamp_partition}/formatted_breweries_data.json")
+    file_io.save_to_json_file_s3(breweries_data_formatted, f"{os.getenv('S3_OUTPUT_PATH')}/transformed/raw/json/{timestamp_partition}/formatted_breweries_data.json")
     file_io.save_to_parquet_folder(breweries_data_formatted, os.path.join(transformed_path, 'raw', 'parquet', timestamp_partition), ['state', 'city'])
-    file_io.save_to_parquet_folder_s3(breweries_data_formatted, f"s3://personal-vc/etl-breweries/transformed/raw/parquet/{timestamp_partition}/", ['state', 'city'])
+    file_io.save_to_parquet_folder_s3(breweries_data_formatted, f"{os.getenv('S3_OUTPUT_PATH')}/transformed/raw/parquet/{timestamp_partition}/", ['state', 'city'])
 
     # Save aggregated view to JSON and Parquet files
     file_io.save_to_json_file(brewery_type_aggregated_view, os.path.join(transformed_path, 'aggregated_data', 'json', timestamp_partition, 'brewery_type_aggregated_view.json'))
-    file_io.save_to_json_file_s3(brewery_type_aggregated_view, f"s3://personal-vc/etl-breweries/transformed/aggregated_data/json/{timestamp_partition}/brewery_type_aggregated_view.json")
+    file_io.save_to_json_file_s3(brewery_type_aggregated_view, f"{os.getenv('S3_OUTPUT_PATH')}/transformed/aggregated_data/json/{timestamp_partition}/brewery_type_aggregated_view.json")
     file_io.save_to_parquet_folder(brewery_type_aggregated_view, os.path.join(transformed_path, 'aggregated_data', 'parquet', timestamp_partition))
-    file_io.save_to_parquet_folder_s3(brewery_type_aggregated_view, f"s3://personal-vc/etl-breweries/transformed/aggregated_data/parquet/{timestamp_partition}/")
+    file_io.save_to_parquet_folder_s3(brewery_type_aggregated_view, f"{os.getenv('S3_OUTPUT_PATH')}/transformed/aggregated_data/parquet/{timestamp_partition}/")
 
 
 def load_data(ti):

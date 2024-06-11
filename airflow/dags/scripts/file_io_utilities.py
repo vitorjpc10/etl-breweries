@@ -21,6 +21,8 @@ class FileIO:
         self.aws_access_key_id = os.getenv('AWS_ACCESS_KEY_ID')
         self.aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY')
 
+        self.s3_output_path = os.getenv('S3_OUTPUT_PATH')
+
         # Initialize the S3 client with the provided credentials
         self.s3_client = boto3.client(
             's3',
@@ -31,6 +33,11 @@ class FileIO:
         # Check if the credentials are defined
         if not self.aws_access_key_id or not self.aws_secret_access_key:
             logging.warning("AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY environment variables are not defined."
+                            " Will be unable to write files to S3 buckets")
+
+        # Check if the S3 Bucket output path is defined
+        if not self.s3_output_path:
+            logging.warning("S3_OUTPUT_PATH environment variables are not defined."
                             " Will be unable to write files to S3 buckets")
 
         self.s3_bucket_name = s3_bucket_name
@@ -113,6 +120,11 @@ class FileIO:
                             "AWS_SECRET_ACCESS_KEY environment variables are not defined.")
             return
 
+        # Check if S3 AWS output path are defined
+        if not self.s3_output_path:
+            logging.warning("Unable to write to S3 because S3_OUTPUT_PATH environment variable is not defined.")
+            return
+
         try:
             # Parse the S3 path into bucket and key
             s3_bucket, s3_key = self._parse_s3_path(s3_path)
@@ -138,6 +150,11 @@ class FileIO:
         if not self.aws_access_key_id or not self.aws_secret_access_key:
             logging.warning("Unable to write to S3 because AWS_ACCESS_KEY_ID or "
                             "AWS_SECRET_ACCESS_KEY environment variables are not defined.")
+            return
+
+        # Check if S3 AWS output path are defined
+        if not self.s3_output_path:
+            logging.warning("Unable to write to S3 because S3_OUTPUT_PATH environment variable is not defined.")
             return
 
         try:

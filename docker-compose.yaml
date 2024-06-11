@@ -24,6 +24,7 @@ services:
       POSTGRES_PORT: 5432
       AWS_ACCESS_KEY_ID: '' #! Insert AWS Access Key here to enable file writing to S3
       AWS_SECRET_ACCESS_KEY: '' #! Insert AWS Secret Key here to enable file writing to S3
+      S3_OUTPUT_PATH: '' #! Insert S3 Bucket pat here write files to e.g. s3://personal-vc/etl-breweries
     volumes:
       - .:/app
 
