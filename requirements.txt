@@ -3,3 +3,5 @@ pandas
 pyarrow
 pyspark
 psycopg2-binary
+boto3
+s3fs

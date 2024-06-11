@@ -1,8 +1,5 @@
 # ETL Data Pipeline for Breweries Data
 
-bonus: visualizer of data SPIKE/ upload to data folder to s3
-
-
 ### Readme em português esta aqui: [README-PT](README-PT.md)
 
 ## Description
@@ -11,6 +8,12 @@ bonus: visualizer of data SPIKE/ upload to data folder to s3
  3. Loads data into Postgres Database for further querying capabilities. 
 
 ## Setup
+
+### Environment Variables
+
+Set the AWS Keys environment variables for in the docker-compose files to write data to S3 Storage. **(Optional)**
+
+__If not defined it will still write data locally in container, but skip over data write to S3 Cloud storage.__
 
 ### Prerequisites
 - Git
@@ -53,7 +56,7 @@ bonus: visualizer of data SPIKE/ upload to data folder to s3
 
 5. Build and run the Docker containers:
     ```bash
-    docker-compose up aiflow-init --build
+    docker-compose up airflow-init --build
     ```
    ```bash
     docker-compose up
@@ -75,10 +78,15 @@ bonus: visualizer of data SPIKE/ upload to data folder to s3
 - Pure Python, SQL, and PySpark are used for data manipulation to ensure lightweight and efficient data processing.
 - The SQL queries for generating reports are stored in separate files (e.g., `queries.sql`). This allows for easy modification of the queries and provides a convenient way to preview the results.
 - To generate the reports, the SQL queries are executed within the PostgreSQL database container. This approach simplifies the process and ensures that the queries can be easily run and modified as needed.
-- The extracted data is saved locally and mounted to the containers, including the raw data coming from the API and the transformed metadata, both in JSON and Parquet format. This setup offers simplicity (KISS principle) and flexibility, allowing for easy access to the data.
+- The extracted data is saved locally ('data' folders) and AWS S3 (Optional) and mounted to the containers, including the raw data coming from the API and the transformed, both in JSON and Parquet format. This setup offers simplicity (KISS principle) and flexibility, allowing for easy access to the data.
 - An aggregate view with the quantity of breweries per type and location is created to provide insights into the data.
 - Orchestration through Apache Airflow ensures task separation and establishes a framework for executing and monitoring the ETL process. It provides notification alerts for retries or task failures, enhancing the robustness of the pipeline.
 
 
 ## Airflow Sample DAG
 ![img.png](img.png)
+
+## AWS S3 File Write Preview
+![img_1.png](img_1.png)
+
+
