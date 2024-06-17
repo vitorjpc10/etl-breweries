@@ -12,7 +12,7 @@
 ### Variáveis de Ambiente
 
 1. Defina as variáveis de ambiente das Chaves da AWS nos arquivos docker-compose para escrever os dados no Armazenamento S3. 
-2. Defina  
+2. Localização do Bucket S3 para Gravar Arquivos do Data Lake
 **(Opcional)**
 
 __Se não forem definidas, os dados ainda serão escritos localmente no contêiner, mas a escrita de dados no armazenamento em nuvem S3 será ignorada.__

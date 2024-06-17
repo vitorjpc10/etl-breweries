@@ -12,7 +12,7 @@
 ### Environment Variables
 
 1. Set the AWS Keys environment variables for in the docker-compose files to write data to S3 Storage.
-2. Defina o Caminho do Bucket de Saída do S3 para gravar os dados.
+2. Define S3 Bucket location Path to write datalake files to
 **(Optional)**
 
 __If not defined it will still write data locally in container, but skip over data write to S3 Cloud storage.__
