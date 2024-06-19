@@ -42,7 +42,7 @@ __If not defined it will still write data locally in container, but skip over da
 
 4. The data will be extracted, transformed, and loaded into the PostgreSQL database based on the logic in `scripts/main.py`.
 
-5. Once built, run the following command to execute queries on both weather and traffic tables from PostgreSQL database container:
+5. Once built, run the following command to execute queries on breweries table from PostgreSQL database container:
     ```bash
     docker exec -it etl-breweries-db-1 psql -U postgres -c "\i queries/queries.sql"
     ```
@@ -66,7 +66,7 @@ __If not defined it will still write data locally in container, but skip over da
 
 6. Once all containers are built access local (http://localhost:8080/) and trigger etl_dag DAG (username and password are admin by default)
 
-7. Once DAG compiles successfully, run the following command to execute queries on both weather and traffic tables:
+7. Once DAG compiles successfully, run the following command to execute queries on breweries table:
     ```bash
     docker exec -it airflow-postgres-1 psql -U airflow -c "\i queries/queries.sql"
     ```
